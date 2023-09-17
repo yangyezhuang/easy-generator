@@ -9,15 +9,36 @@ import java.util.List;
 
 /**
  * ${serviceName}
+ *
+ * @author: YZ.YANG
+ * @date: ${.now?string["yyyy-MM-dd HH:mm:ss"]}
  */
-@Service
-public class ${serviceName}{
+public interface ${serviceName}{
 
-    @Autowired
-    ${mapperName} ${mapperName?uncap_first};
-    public List<${modelName}> getAll${modelName}s(){
-        return ${mapperName?uncap_first}.getAll${modelName}s();
-    }
+    /**
+     * 查询列表
+     */
+    List<${modelName}> get${modelName}List();
+
+     /**
+      * 查询实体
+      */
+     ${modelName} get${modelName}(int id);
+
+    /**
+     * 插入
+     */
+    int insert${modelName}(${modelName} ${modelName?lower_case});
+
+    /**
+     * 更新
+     */
+    int update${modelName}(${modelName} ${modelName?lower_case});
+
+    /**
+     * 删除
+     */
+    int delete${modelName}(int id);
 
 }
 

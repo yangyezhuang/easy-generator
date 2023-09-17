@@ -1,53 +1,52 @@
-package ${package}.${moduleName}.service.impl;
+package ${packageName}.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import ${packageName}.model.${modelName};
+import ${packageName}.mapper.${mapperName};
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import ${mainPath}.common.utils.PageUtils;
-import ${mainPath}.common.utils.Query;
-import ${package}.${moduleName}.dao.${className}Dao;
-import ${package}.${moduleName}.entity.${className}Entity;
-import ${package}.${moduleName}.service.${className}Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Map;
+import java.util.List;
 
-
-@Service("${classname}Service")
-public class ${className}ServiceImpl implements ${className}Service {
+/**
+ * ${serviceName}
+ *
+ * @author: YZ.YANG
+ * @date: ${.now?string["yyyy-MM-dd HH:mm:ss"]}
+ */
+@Service
+public class ${serviceName}Impl implements ${serviceName}{
 
     @Autowired
-    private ${className}Dao ${classname}Dao;
+    private ${mapperName} ${mapperName?uncap_first};
 
 
     @Override
-    public List<${className}Entity> findAll() {
-        return ${classname}Dao.findAll();
+    public List<${modelName}> get${modelName}List(){
+        return ${mapperName?uncap_first}.selete${modelName}All();
     }
 
 
     @Override
-    public  ${className}Entity findById(int id) {
-        return ${classname}Dao.findById(id);
+    public ${modelName} get${modelName}(int id){
+        return ${serviceName?uncap_first}.selete${modelName}ById(id);
     }
 
 
     @Override
-    public Integer save(${className}Entity ${classname}) {
-        return ${classname}Dao.findAll();
+    public int insert${modelName}(${modelName} ${modelName?lower_case}){
+        return ${serviceName?uncap_first}.insert${modelName}(${modelName?lower_case});
     }
 
 
     @Override
-    public Integer update(${className}Entity ${classname}) {
-        return ${classname}Dao.update(${classname});
+    public int update${modelName}(${modelName} ${modelName?lower_case}){
+        return ${serviceName?uncap_first}.update${modelName}(${modelName?lower_case});
     }
 
 
     @Override
-    public Integer deleteById(int id) {
-        return ${classname}Dao.deleteById(id);
+    public int delete${modelName}(int id){
+        return ${serviceName?uncap_first}.delete${modelName}ById(id);
     }
 
 }

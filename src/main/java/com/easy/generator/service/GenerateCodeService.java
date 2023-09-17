@@ -36,8 +36,8 @@ public class GenerateCodeService {
 
     static {
         cfg = new Configuration(Configuration.VERSION_2_3_30);
-        cfg.setTemplateLoader(new ClassTemplateLoader(GenerateCodeService.class, "/templates"));
-        cfg.setDefaultEncoding("UTF-8");
+        cfg.setTemplateLoader(new ClassTemplateLoader(GenerateCodeService.class, "/templates" ));
+        cfg.setDefaultEncoding("UTF-8" );
     }
 
     /**
@@ -50,11 +50,12 @@ public class GenerateCodeService {
     public RespBean generateCode(List<TableClass> tableClassList, String realPath) {
         try {
             // 加载模板
-            Template modelTemplate = cfg.getTemplate("Entity.java.ftl");
-            Template mapperJavaTemplate = cfg.getTemplate("Mapper.java.ftl");
-            Template mapperXmlTemplate = cfg.getTemplate("Mapper.xml.ftl");
-            Template serviceTemplate = cfg.getTemplate("Service.java.ftl");
-            Template controllerTemplate = cfg.getTemplate("Controller.java.ftl");
+            Template modelTemplate = cfg.getTemplate("Entity.java.ftl" );
+            Template mapperJavaTemplate = cfg.getTemplate("Mapper.java.ftl" );
+            Template mapperXmlTemplate = cfg.getTemplate("Mapper.xml.ftl" );
+            Template serviceTemplate = cfg.getTemplate("Service.java.ftl" );
+            Template serviceImplTemplate = cfg.getTemplate("ServiceImpl.java.ftl" );
+            Template controllerTemplate = cfg.getTemplate("Controller.java.ftl" );
 
             Connection connection = DBUtils.getConnection();
             DatabaseMetaData metaData = connection.getMetaData();
@@ -64,9 +65,9 @@ public class GenerateCodeService {
                 ResultSet primaryKeys = metaData.getPrimaryKeys(connection.getCatalog(), null, tableClass.getTableName());
                 List<ColumnClass> columnClassList = new ArrayList<>();
                 while (columns.next()) {
-                    String column_name = columns.getString("COLUMN_NAME");
-                    String type_name = columns.getString("TYPE_NAME");
-                    String remarks = columns.getString("REMARKS");
+                    String column_name = columns.getString("COLUMN_NAME" );
+                    String type_name = columns.getString("TYPE_NAME" );
+                    String remarks = columns.getString("REMARKS" );
                     ColumnClass columnClass = new ColumnClass();
                     columnClass.setRemark(remarks);
                     columnClass.setColumnName(column_name);
@@ -74,7 +75,7 @@ public class GenerateCodeService {
                     columnClass.setPropertyName(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, column_name));
                     primaryKeys.first();
                     while (primaryKeys.next()) {
-                        String pkName = primaryKeys.getString("COLUMN_NAME");
+                        String pkName = primaryKeys.getString("COLUMN_NAME" );
                         if (column_name.equals(pkName)) {
                             columnClass.setIsPrimary(true);
                         }
@@ -82,20 +83,21 @@ public class GenerateCodeService {
                     columnClassList.add(columnClass);
                 }
                 tableClass.setColumns(columnClassList);
-                String path = realPath + "/" + tableClass.getPackageName().replace(".", "/");
+                String path = realPath + "/" + tableClass.getPackageName().replace(".", "/" );
 
                 // 生成文件
-                generate(modelTemplate, tableClass, path + "/model/");
-                generate(mapperJavaTemplate, tableClass, path + "/mapper/");
-                generate(mapperXmlTemplate, tableClass, path + "/mapper/");
-                generate(serviceTemplate, tableClass, path + "/service/");
-                generate(controllerTemplate, tableClass, path + "/controller/");
+                generate(modelTemplate, tableClass, path + "/model/" );
+                generate(mapperJavaTemplate, tableClass, path + "/mapper/" );
+                generate(mapperXmlTemplate, tableClass, path + "/mapper/" );
+                generate(serviceTemplate, tableClass, path + "/service/" );
+                generate(serviceImplTemplate, tableClass, path + "/service/impl/" );
+                generate(controllerTemplate, tableClass, path + "/controller/" );
             }
             return RespBean.ok("代码已生成", realPath);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return RespBean.error("生成失败");
+        return RespBean.error("生成失败" );
     }
 
 
@@ -113,7 +115,7 @@ public class GenerateCodeService {
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        String fileName = path + "/" + tableClass.getModelName() + template.getName().replace(".ftl", "").replace("Model", "");
+        String fileName = path + "/" + tableClass.getModelName() + template.getName().replace(".ftl", "" ).replace("Model", "" );
         FileOutputStream fos = new FileOutputStream(fileName);
         OutputStreamWriter out = new OutputStreamWriter(fos);
         template.process(tableClass, out);

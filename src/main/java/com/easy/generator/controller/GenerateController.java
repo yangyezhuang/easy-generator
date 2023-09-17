@@ -9,9 +9,7 @@ import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -34,7 +32,7 @@ public class GenerateController {
     @Autowired
     private GenerateCodeService generateCodeService;
 
-    @Value("${generate.path}")
+    @Value("${generate.path}" )
     private String generatePath;
 
 
@@ -44,16 +42,16 @@ public class GenerateController {
      * @param db
      * @return
      */
-    @PostMapping("/connect")
+    @RequestMapping(path = "/connect", method = RequestMethod.POST)
     public RespBean connect(@RequestBody Db db) {
         log.info("db:" + db);
         Connection con = DBUtils.initDb(db);
         log.info("conn:" + con);
 
         if (con != null) {
-            return RespBean.ok("数据库连接成功");
+            return RespBean.ok("数据库连接成功" );
         }
-        return RespBean.error("数据库连接失败");
+        return RespBean.error("数据库连接失败" );
     }
 
 
@@ -63,32 +61,34 @@ public class GenerateController {
      * @param map
      * @return
      */
-    @PostMapping("/config")
+    @RequestMapping(path = "/config", method = RequestMethod.POST)
     public RespBean config(@RequestBody Map<String, String> map) {
         log.info("map:" + map);
-        String packageName = map.get("packageName");
+        String packageName = map.get("packageName" );
         try {
             Connection connection = DBUtils.getConnection();
             DatabaseMetaData metaData = connection.getMetaData();
             ResultSet tables = metaData.getTables(connection.getCatalog(), null, null, null);
             List<TableClass> tableClassList = new ArrayList<>();
+
             while (tables.next()) {
                 TableClass tableClass = new TableClass();
                 tableClass.setPackageName(packageName);
-                String table_name = tables.getString("TABLE_NAME");
+                String table_name = tables.getString("TABLE_NAME" );
                 String modelName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, table_name);
                 tableClass.setTableName(table_name);
                 tableClass.setModelName(modelName);
-                tableClass.setControllerName(modelName + "Controller");
-                tableClass.setMapperName(modelName + "Mapper");
-                tableClass.setServiceName(modelName + "Service");
+                tableClass.setControllerName(modelName + "Controller" );
+                tableClass.setMapperName(modelName + "Mapper" );
+                tableClass.setServiceName(modelName + "Service" );
                 tableClassList.add(tableClass);
             }
+
             return RespBean.ok("数据库信息读取成功", tableClassList);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return RespBean.error("数据库信息读取失败");
+        return RespBean.error("数据库信息读取失败" );
     }
 
 
@@ -98,7 +98,7 @@ public class GenerateController {
      * @param tableClassList
      * @return
      */
-    @PostMapping("/generateCode")
+    @RequestMapping(path = "/generateCode", method = RequestMethod.POST)
     public RespBean generateCode(@RequestBody List<TableClass> tableClassList) {
         return generateCodeService.generateCode(tableClassList, generatePath);
     }
